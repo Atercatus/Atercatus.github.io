@@ -298,6 +298,10 @@ defaults:
       share: true
       related: true
       read_time: true
+      header:
+        teaser: /assets/images/nestjs/nest-logo-small.png
+        overlay_image: /assets/images/nestjs/nest-og.png
+        og_image: /assets/images/nestjs/nest-og.png
   # _posts
   - scope:
       path: ""
