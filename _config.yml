@@ -284,6 +284,9 @@ collections:
   nestjs:
     permalink: /:collection/:path
     output: true
+  typescript:
+    permalink: /:collection/:path
+    output: true
 
 # Defaults
 defaults:
@@ -293,7 +296,7 @@ defaults:
       type: nestjs
     values:
       layout: single
-      author_progile: false
+      author_profile: false
       comments: true
       share: true
       related: true
@@ -302,6 +305,26 @@ defaults:
         teaser: /assets/images/nestjs/nest-logo-small.png
         overlay_image: /assets/images/nestjs/nest-og.png
         og_image: /assets/images/nestjs/nest-og.png
+  # _typescript
+  - scope:
+      path: ""
+      type: typescript
+    values:
+      layout: single
+      author_profile: false
+      comments: true
+      share: true
+      related: true
+      read_time: true
+      published: true
+      tag:
+        - TypeScript
+      category:
+        - TypeScript
+      header:
+        teaser: /assets/images/typescript/typescript-logo.png
+        overlay_image: /assets/images/typescript/typescript.png
+
   # _posts
   - scope:
       path: ""

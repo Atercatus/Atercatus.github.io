@@ -19,11 +19,11 @@ feature_row:
     btn_class: "btn--primary"
     btn_label: "See more"
 
-  - image_path: /assets/images/mm-responsive-feature.png
-    alt: "fully responsive"
-    title: "Responsive layouts"
-    excerpt: "Built with HTML5 + CSS3. All layouts are fully responsive with helpers to augment your content."
-    url: "/nestjs/"
+  - image_path: /assets/images/typescript/typescript-logo.png
+    alt: "TypeScript"
+    title: "TypeScript"
+    excerpt: "TypeScript is a typed superset of JavaScript that compiles to plain JavaScript"
+    url: "/typescript/"
     btn_class: "btn--primary"
     btn_label: "See more"
 

@@ -15,7 +15,7 @@ tags:
   - github pages
   - collection
 
-last_modified_at: 2019-04-13T08:06:00-05:00
+last_modified_at: 2019-04-13T08:06:00
 ---
 
 ## Minimal Mistake 에서 Collection 을 이용해보자
