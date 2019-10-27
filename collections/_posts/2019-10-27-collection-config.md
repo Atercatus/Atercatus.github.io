@@ -1,8 +1,9 @@
 ---
 layout: single
 header:
-  image: https://unsplash.com/photos/IClZBVw5W5A
-  teaser: https://unsplash.com/photos/IClZBVw5W5A
+  overlay_image: /assets/images/random-cover/1.png
+  teaser: /assets/images/random-cover/1.png
+  caption: Photo by Todd Quackenbush on Unsplash
 
 title: "Minimal mistakes collection 적용하기"
 excerpt: "collection 을 적용해보자"
