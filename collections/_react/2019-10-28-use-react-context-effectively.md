@@ -6,122 +6,128 @@ last_modified_at: 2019-10-28T12:06:00
 
 ## Global State and Dispatch
 
-```javascript
-const userState = createContext();
-const { Provider: UserStateProvider } = userState;
-const userDispatch = createContext();
-const { Provider: UserDispatchProvider } = userDispatch;
-```
+Reducer를 사용할 때 이를 Context API를 통해 다른 컴포넌트에서 사용하게 할 수 있습니다.
 
-- 2개의 state 와 dispatch 를 분리하여 Context를 생성합니다
+이 때 하나의 컨텍스트에 state와 dispatch를 모두 저장할 경우, dispatch만 필요한 컴포넌트에서 state가 변경될 경우 다시 렌더링 되는 문제가 발생합니다.
 
-```javascript
-function useUserState() {
-  const context = useContext(userState);
+따라서 각각의 다른 컨텍스트로 분리하여 제공하는 것이 좋습니다.
 
-  if (!context) {
-    throw new Error(`useUserState must be used within a UserProvider`);
-  }
-
-  return context;
-}
-
-function useUserDispatch() {
-  const context = useContext(userDispatch);
-
-  if (!context) {
-    throw new Error(`useUserDispatch must be used within a UserProvider`);
-  }
-
-  return context;
-}
-```
+- Context.js
 
 ```javascript
-const reducer = (state, { type, payload }) => {
+import React, { createContext, useReducer, useContext } from "react";
+
+const stateContext = createContext();
+const { Provider: GlobalStateProvider } = stateContext;
+const dispatchContext = createContext();
+const { Provider: DispatchProvider } = dispatchContext;
+const context = createContext();
+const { Provider } = context;
+
+function reducer(state, { type }) {
+  console.log("reducer");
   switch (type) {
-    case "login":
-      return payload;
-    case "logout":
-      return { redirect: true };
+    case "A":
+      return "A";
+    case "B":
+      return "B";
     default:
-      throw new Error();
+      return;
   }
-};
+}
 
-function UserProvider(props) {
-  const [user, dispatch] = useReducer(reducer, {});
+function useMyContext() {
+  const res = useContext(context);
+  console.log(res);
+  return res;
+}
+function useGlobalState() {
+  return useContext(stateContext);
+}
+function useDispatch() {
+  return useContext(dispatchContext);
+}
 
-  useEffect(() => {
-    const refreshSilently = async () => {
-      const payload = await reqeustJWTs({ url: routes.refresh });
-      dispatch({ type: "login", payload });
-    };
-
-    refreshSilently();
-  }, []);
+function Context(props) {
+  const [state, dispatch] = useReducer(reducer);
 
   return (
-    <UserStateProvider value={user}>
-      <UserDispatchProvider value={dispatch}>
-        {props.children}
-      </UserDispatchProvider>
-    </UserStateProvider>
+    <GlobalStateProvider value={state}>
+      <DispatchProvider value={dispatch}>{props.children}</DispatchProvider>
+    </GlobalStateProvider>
   );
 }
 
-export { UserProvider, useUserState, useUserDispatch };
+// 합쳐져 있는 경우 state없이 dispatch만 사용하는 컴포넌트에서도 리렌더링이 발생합니다.
+
+// function Context(props) {
+//   const [state, dispatch] = useReducer(reducer);
+//   const value = { state, dispatch };
+
+//   return <Provider value={value}> {props.children}</Provider>;
+// }
+
+export { Context, useMyContext, useGlobalState, useDispatch };
+```
+
+- A.js
+
+```javascript
+import React from "react";
+import { useMyContext, useGlobalState, useDispatch } from "./Context";
+
+function A() {
+  // const { state, dispatch } = useMyContext();
+  const state = useGlobalState();
+  const dispatch = useDispatch();
+
+  console.log("A rerender!");
+
+  return <div onClick={() => dispatch({ type: "A" })}>A: {state}</div>;
+}
+export default A;
+```
+
+- B.js
+
+```javascript
+import React from "react";
+import { useMyContext, useDispatch, useGlobalState } from "./Context";
+
+function B() {
+  // const { state, dispatch } = useMyContext();
+  const dispatch = useDispatch();
+
+  console.log("B rerender!");
+
+  return <div onClick={() => dispatch({ type: "B" })}>B</div>;
+}
+
+export default B;
 ```
 
 - App.js
 
 ```javascript
-export default function App() {
-  return (
-    <UserProvider>
-      <Router>
-        <S.Container>
-          <Nav />
-          {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-          <Switch>
-            <Route path={routes.login}>
-              <Login />
-            </Route>
-            <Route path={routes.main}>
-              <Main />
-            </Route>
-          </Switch>
-        </S.Container>
-      </Router>
-    </UserProvider>
-  );
-}
-```
+import React from "react";
+import "./App.css";
 
-```javascript
-export default function Nav() {
-  const user = useUserState();
-  const dispatch = useUserDispatch();
+import A from "./Components/A";
+import B from "./Components/B";
+import { Context } from "./Components/Context";
 
+function App() {
   return (
-    <Container>
-      {user.redirect && <Redirect to={routes.login} />}
-      <div>
-        <span>
-          <Link to={routes.main}>main</Link>
-        </span>
-        {!user.email ? (
-          <span>
-            <Link to={routes.login}>Login</Link>
-          </span>
-        ) : (
-          <span onClick={() => logout({ user, dispatch })}>Logout</span>
-        )}
+    <Context>
+      <div className="App">
+        <>
+          <A />
+          <B />
+        </>
       </div>
-      <span>{user.name}</span>
-      <span>{user.email}</span>
-    </Container>
+    </Context>
   );
 }
+
+export default App;
 ```
