@@ -99,9 +99,9 @@ social:
 
 # Analytics
 analytics:
-  provider: false # false (default), "google", "google-universal", "custom"
+  provider: "google-gtag" # false (default), "google", "google-universal", "custom"
   google:
-    tracking_id:
+    tracking_id: "UA-150924003-1"
     anonymize_ip: # true, false (default)
 
 # Site Author
@@ -287,6 +287,9 @@ collections:
   typescript:
     permalink: /:collection/:path
     output: true
+  react:
+    permalink: /:collection/:path
+    output: true
 
 # Defaults
 defaults:
@@ -324,6 +327,26 @@ defaults:
       header:
         teaser: /assets/images/typescript/typescript-logo.png
         overlay_image: /assets/images/typescript/typescript.png
+
+  # _react
+  - scope:
+      path: ""
+      type: react
+    values:
+      layout: single
+      author_profile: false
+      comments: true
+      share: true
+      related: true
+      read_time: true
+      published: true
+      tag:
+        - React
+      category:
+        - React
+      header:
+        teaser: /assets/images/react/react-logo.png
+        overlay_image: /assets/images/react/react-overlay.png
 
   # _posts
   - scope:

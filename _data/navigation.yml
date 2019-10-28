@@ -4,8 +4,8 @@ main:
     url: /about/
   - title: "Posts"
     url: /posts/
-  - title: Categories
-    url: /categories/
+  - title: "React"
+    url: /react/
   - title: "Nest.js"
     url: /nestjs/
   - title: Typescript
