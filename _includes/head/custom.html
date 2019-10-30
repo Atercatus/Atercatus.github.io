@@ -3,3 +3,17 @@
 <!-- insert favicons. use https://realfavicongenerator.net/ -->
 
 <!-- end custom head snippets -->
+<head>
+  <title>{{ page.title }}</title>
+  <meta
+    name="description"
+    content="{{
+      page.excerpt
+        | default: site.description
+        | strip_html
+        | normalize_whitespace
+        | truncate: 160
+        | escape
+    }}"
+  />
+</head>
