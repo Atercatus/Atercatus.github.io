@@ -1,13 +1,6 @@
 ---
 title: "Introduction of Nest.js"
 excerpt: "Nest.js 의 전체적인 개념과 주요 요소들에 대해서 배워보자"
-
-header:
-  # teaser: /assets/images/random-cover/1.png
-  teaser: /assets/images/nestjs/nest-logo-small.png
-  overlay_image: /assets/images/nestjs/nest-og.png
-  og_image: /assets/images/nestjs/nest-og.png
-
 last_modified_at: 2019-10-19T20:00:00
 ---
 
