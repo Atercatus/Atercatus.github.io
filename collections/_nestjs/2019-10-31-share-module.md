@@ -1,7 +1,7 @@
 ---
 title: "Shared module"
 excerpt: "Nest.js에서 Module을 공유하는 방법에 대해서 알아보자"
-last_modified_at: 2019-10-19T20:00:00
+last_modified_at: 2019-10-31T20:00:00
 ---
 
 ## Shared module
