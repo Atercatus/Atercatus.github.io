@@ -1,6 +1,6 @@
 ---
-title: "Injection scopes of Nest.js"
-excerpt: "Nest.js 의 Injection scopes에 대해 알아보자"
+title: "Injection scopes of NestJS "
+excerpt: "NestJS 의 Injection scopes에 대해 알아보자"
 last_modified_at: 2019-10-31T18:00:00
 ---
 
