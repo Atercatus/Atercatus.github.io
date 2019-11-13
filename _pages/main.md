@@ -27,13 +27,13 @@ feature_row:
     btn_class: "btn--primary"
     btn_label: "See more"
 
-  - image_path: /assets/images/mm-free-feature.png
-    alt: "100% free"
-    title: "100% free"
-    excerpt: "Free to use however you want under the MIT License. Clone it, fork it, customize it... whatever!"
-    url: "/docs/license/"
+  - image_path: /assets/images/boost-tv/boostcamp.png
+    alt: "Boost TV"
+    title: "Boost TV"
+    excerpt: "2019 Boost TV 개발 기록"
+    url: "/boost-tv/"
     btn_class: "btn--primary"
-    btn_label: "Learn more"
+    btn_label: "See more"
 ---
 
 {% include feature_row %}

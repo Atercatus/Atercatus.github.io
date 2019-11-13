@@ -8,5 +8,7 @@ main:
     url: /react/
   - title: "Nest.js"
     url: /nestjs/
-  - title: Typescript
+  - title: "Typescript"
     url: /typescript/
+  - title: "BoostTv"
+    url: /boost-tv/
