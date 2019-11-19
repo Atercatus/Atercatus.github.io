@@ -1,6 +1,6 @@
 ---
-title: " Material UI Grid 전략"
-excerpt: " Material UI Grid 전략"
+title: "Material UI Grid 전략"
+excerpt: "Material UI Grid 전략"
 last_modified_at: 2019-11-17T19:34:00
 ---
 
