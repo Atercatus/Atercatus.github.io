@@ -296,6 +296,12 @@ collections:
   boostTv:
     permalink: /:collection/:path
     output: true
+  til:
+    permalink: /:collection/:path
+    output: true
+  aws:
+    permalink: /:collection/:path
+    output: true
 
 # Defaults
 defaults:
@@ -385,6 +391,48 @@ defaults:
       header:
         teaser: /assets/images/react/react-logo.png
         overlay_image: /assets/images/react/react-overlay.png
+
+  # _til
+  - scope:
+      path: ""
+      type: til
+    values:
+      layout: single
+      author_profile: false
+      comments: true
+      share: true
+      related: true
+      read_time: true
+      published: true
+      tag:
+        - TIL
+      category:
+        - TIL
+      header:
+        teaser: /assets/images/TIL/til.png
+        overlay_image: /assets/images/TIL/til.png
+        og_image: /assets/images/TIL/til.png
+
+  # _aws
+  - scope:
+      path: ""
+      type: aws
+    values:
+      layout: single
+      author_profile: false
+      comments: true
+      share: true
+      related: true
+      read_time: true
+      published: true
+      tag:
+        - AWS
+      category:
+        - AWS
+      header:
+        teaser: /assets/images/AWS/aws-logo-8.jpg
+        overlay_image: /assets/images/AWS/aws-logo-8.jpg
+        og_image: /assets/images/AWS/AWS-logo-770x285.jpg
 
   # _posts
   - scope:

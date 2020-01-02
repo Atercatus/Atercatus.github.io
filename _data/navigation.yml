@@ -14,3 +14,7 @@ main:
     url: /typescript/
   - title: "BoostTv"
     url: /boost-tv/
+  - title: "TIL"
+    url: /til/
+  - title: "AWS"
+    url: /aws/

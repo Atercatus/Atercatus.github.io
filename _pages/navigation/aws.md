@@ -1,12 +1,12 @@
 ---
-title: Boost TV
+title: AWS
 layout: collection
-permalink: /boost-tv/
-collection: boostTv
+permalink: /aws/
+collection: aws
 entries_layout: grid
 classes: wide
 sort_by: date # date (default) title
 sort_order: forward # forward (default), reverse
 header:
-  overlay_image: /assets/images/boost-tv/boostcamp.png
+  overlay_image: /assets/images/AWS/aws-logo-770x285.jpg
 ---
