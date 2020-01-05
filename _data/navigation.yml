@@ -1,20 +1,22 @@
 # main links
 main:
-  - title: "About"
-    url: /about/
-  - title: "Posts"
-    url: /posts/
   - title: "React"
     url: /react/
   - title: "Nest.js"
     url: /nestjs/
   - title: "Next.js"
     url: /nextjs/
-  - title: "Typescript"
-    url: /typescript/
   - title: "BoostTv"
     url: /boost-tv/
   - title: "TIL"
     url: /til/
   - title: "AWS"
     url: /aws/
+  - title: "Algorithm"
+    url: /algorithm/
+  - title: "About"
+    url: /about/
+  - title: "Posts"
+    url: /posts/
+  - title: "Typescript"
+    url: /typescript/

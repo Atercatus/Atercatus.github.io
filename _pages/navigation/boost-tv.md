@@ -3,6 +3,7 @@ title: Boost TV
 layout: collection
 permalink: /boost-tv/
 collection: boostTv
+author_profile: true
 entries_layout: grid
 classes: wide
 sort_by: date # date (default) title

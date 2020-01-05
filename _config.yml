@@ -302,6 +302,9 @@ collections:
   aws:
     permalink: /:collection/:path
     output: true
+  algorithm:
+    permalink: /:collection/:path
+    output: true
 
 # Defaults
 defaults:
@@ -330,7 +333,7 @@ defaults:
       author_profile: false
       comments: true
       share: true
-      related: true
+      related: false
       read_time: true
       header:
         teaser: /assets/images/boost-tv/boostcamp.png
@@ -346,7 +349,7 @@ defaults:
       author_profile: false
       comments: true
       share: true
-      related: true
+      related: false
       read_time: true
       header:
         teaser: /assets/images/nestjs/nest-logo-small.png
@@ -361,7 +364,7 @@ defaults:
       author_profile: false
       comments: true
       share: true
-      related: true
+      related: false
       read_time: true
       published: true
       tag:
@@ -381,7 +384,7 @@ defaults:
       author_profile: false
       comments: true
       share: true
-      related: true
+      related: false
       read_time: true
       published: true
       tag:
@@ -401,7 +404,7 @@ defaults:
       author_profile: false
       comments: true
       share: true
-      related: true
+      related: false
       read_time: true
       published: true
       tag:
@@ -422,7 +425,7 @@ defaults:
       author_profile: false
       comments: true
       share: true
-      related: true
+      related: false
       read_time: true
       published: true
       tag:
@@ -433,6 +436,27 @@ defaults:
         teaser: /assets/images/AWS/aws-logo-8.jpg
         overlay_image: /assets/images/AWS/aws-logo-8.jpg
         og_image: /assets/images/AWS/AWS-logo-770x285.jpg
+
+  # _algorithm
+  - scope:
+      path: ""
+      type: algorithm
+    values:
+      layout: single
+      author_profile: false
+      comments: true
+      share: true
+      related: false
+      read_time: true
+      published: true
+      tag:
+        - algorithm
+      category:
+        - algorithm
+      header:
+        teaser: /assets/images/algorithm/algo.png
+        overlay_image: /assets/images/algorithm/algo.png
+        og_image: /assets/images/algorithm/algo.png
 
   # _posts
   - scope:

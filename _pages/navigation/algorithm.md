@@ -1,13 +1,13 @@
 ---
-title: React
+title: Algorithm
 layout: collection
-permalink: /react/
-collection: react
-entries_layout: grid
+permalink: /algorithm/
+collection: algorithm
 author_profile: true
+entries_layout: grid
 classes: wide
 sort_by: date # date (default) title
 sort_order: forward # forward (default), reverse
 header:
-  image: /assets/images/react/react-overlay.png
+  overlay_image: /assets/images/algorithm/algo.png
 ---

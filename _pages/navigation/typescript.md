@@ -3,6 +3,7 @@ title: TypeScript
 layout: collection
 permalink: /typescript/
 collection: typescript
+author_profile: true
 entries_layout: grid
 classes: wide
 sort_by: date # date (default) title
