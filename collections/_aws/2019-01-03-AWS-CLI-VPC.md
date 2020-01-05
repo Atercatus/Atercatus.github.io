@@ -451,6 +451,66 @@ aws ec2 delete-internet-gateway --internet-gateway-id igw-1ff7a07b
 aws ec2 delete-vpc --vpc-id vpc-2f09a348
 ```
 
+## 외부 API Call 확인해보기
+
+### Nodejs 설치
+
+- [Amazon linux 에 Nodejs 설치](https://docs.aws.amazon.com/ko_kr/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
+
+### HTTPS 요청
+
+Node.js 의 https 모듈을 이용해 네이버페이지를 요청한 다음 반환하는 서버를 만들어 봤습니다. 아래의 코드를 통해 서버를 실행할 경우, 클라이언트에서 이 서버에 요청을 하면 네이버 페이지가 나옵니다.
+
+```javascript
+const express = require("express");
+const app = express();
+const https = require("https");
+
+const PORT = 4000;
+
+const options = {
+  host: "www.naver.com",
+  path: "/"
+};
+
+function httpRequest() {
+  return new Promise((resolve, reject) => {
+    const req = https.get("https://www.naver.com", res => {
+      let body = "";
+
+      res.on("data", chunk => {
+        body += chunk;
+      });
+      res.on("end", () => {
+        resolve(body);
+      });
+    });
+
+    req.end();
+  });
+}
+
+const callback = res => {
+  let body = "";
+  res.on("data", data => {
+    body += data;
+  });
+
+  res.on("end", () => {
+    console.log(body);
+    return body;
+  });
+};
+
+app.get("/", async (req, res) => {
+  const ret = await httpRequest(options);
+
+  console.log(ret);
+
+  res.send(ret);
+});
+```
+
 ## 참조 링크
 
 - [AWS 계정 관리](https://www.44bits.io/ko/post/publishing_and_managing_aws_user_access_key)
