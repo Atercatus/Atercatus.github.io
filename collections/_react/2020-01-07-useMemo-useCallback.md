@@ -91,7 +91,7 @@ const dispenseCallback = React.useCallback(dispense, []);
 이 `dispense`함수가 핸들러로 추가될 때 `onClick={() => dispense(candy)}` 와 같이 선언되어있습니다. 이 때문에 매 렌더링시에 새로운 함수가 생성되어 전달되고 button 은 다시 렌더링이 이루어 집니다.
 이렇게 되면 `useCallback` 으로 감싸진 함수는 메모리에 남아있는 상태에서 새로운 함수가 다시 생성되므로 메모이제이션의 이점도 사라집니다.
 
-### initialCandies 에 `useMemo`를 사용하면?
+### `initialCandies` 에 `useMemo`를 사용하면?
 
 ```tsx
 const initialCandies = ['snickers', 'skittles', 'twix', 'milky way']
