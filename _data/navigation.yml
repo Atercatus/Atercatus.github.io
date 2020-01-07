@@ -1,22 +1,26 @@
 # main links
 main:
-  - title: "React"
+  - title: "React.js"
     url: /react/
   - title: "Nest.js"
     url: /nestjs/
   - title: "Next.js"
     url: /nextjs/
-  - title: "BoostTv"
-    url: /boost-tv/
+  - title: "Database"
+    url: /database/
+  - title: "Wedev"
+    url: /wedev/
   - title: "TIL"
     url: /til/
   - title: "AWS"
     url: /aws/
   - title: "Algorithm"
     url: /algorithm/
+  - title: "Typescript"
+    url: /typescript/
+  - title: "JAVA"
+    url: /java/
   - title: "About"
     url: /about/
   - title: "Posts"
     url: /posts/
-  - title: "Typescript"
-    url: /typescript/

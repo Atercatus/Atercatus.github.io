@@ -293,7 +293,7 @@ collections:
   react:
     permalink: /:collection/:path
     output: true
-  boostTv:
+  wedev:
     permalink: /:collection/:path
     output: true
   til:
@@ -303,6 +303,12 @@ collections:
     permalink: /:collection/:path
     output: true
   algorithm:
+    permalink: /:collection/:path
+    output: true
+  database:
+    permalink: /:collection/:path
+    output: true
+  java:
     permalink: /:collection/:path
     output: true
 
@@ -334,10 +340,10 @@ defaults:
         overlay_image: /assets/images/nextjs/next-logo.png
         og_image: /assets/images/nextjs/next-logo.png
 
-  # _boostTv
+  # _wedev
   - scope:
       path: ""
-      type: boostTv
+      type: wedev
     values:
       layout: single
       author_profile: false
@@ -349,7 +355,10 @@ defaults:
       author_profile: true
       layout: single
       # classes: wide
-
+      tag:
+        - wedev
+      category:
+        - wedev
       toc: true #Table Of Contents 목차 보여줌
       toc_label: "My Table of Contents" # toc 이름 정의
       toc_icon: "cog" #font Awesome아이콘으로 toc 아이콘 설정
@@ -382,7 +391,10 @@ defaults:
       toc_icon: "cog" #font Awesome아이콘으로 toc 아이콘 설정
       toc_sticky: true # 스크롤 내릴때 같이 내려가는 목차
 
-      
+      tag:
+        - Nest.js
+      category:
+        - Nest.js
       header:
         teaser: /assets/images/nestjs/nest-logo-small.png
         overlay_image: /assets/images/nestjs/nest-og.png
@@ -543,6 +555,72 @@ defaults:
         teaser: /assets/images/algorithm/algo.png
         overlay_image: /assets/images/algorithm/algo.png
         og_image: /assets/images/algorithm/algo.png
+
+
+  # _database
+  - scope:
+      path: ""
+      type: database
+    values:
+      layout: single
+      author_profile: false
+      comments: true
+      share: true
+      related: false
+      read_time: true
+      published: true
+
+      author_profile: true
+      layout: single
+      # classes: wide
+
+      toc: true #Table Of Contents 목차 보여줌
+      toc_label: "My Table of Contents" # toc 이름 정의
+      toc_icon: "cog" #font Awesome아이콘으로 toc 아이콘 설정
+      toc_sticky: true # 스크롤 내릴때 같이 내려가는 목차
+
+      
+      tag:
+        - database
+      category:
+        - database
+      header:
+        # teaser: /assets/images/algorithm/algo.png
+        # overlay_image: /assets/images/algorithm/algo.png
+        # og_image: /assets/images/algorithm/algo.png
+
+  # _java
+  - scope:
+      path: ""
+      type: java
+    values:
+      layout: single
+      author_profile: false
+      comments: true
+      share: true
+      related: false
+      read_time: true
+      published: true
+
+      author_profile: true
+      layout: single
+      # classes: wide
+
+      toc: true #Table Of Contents 목차 보여줌
+      toc_label: "My Table of Contents" # toc 이름 정의
+      toc_icon: "cog" #font Awesome아이콘으로 toc 아이콘 설정
+      toc_sticky: true # 스크롤 내릴때 같이 내려가는 목차
+
+      
+      tag:
+        - java
+      category:
+        - java
+      header:
+        # teaser: /assets/images/algorithm/algo.png
+        # overlay_image: /assets/images/algorithm/algo.png
+        # og_image: /assets/images/algorithm/algo.png
+
 
   # _posts
   - scope:

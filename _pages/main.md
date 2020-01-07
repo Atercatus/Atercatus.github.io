@@ -28,10 +28,10 @@ feature_row:
     btn_label: "See more"
 
   - image_path: /assets/images/boost-tv/boostcamp.png
-    alt: "Boost TV"
-    title: "Boost TV"
-    excerpt: "2019 Boost TV 개발 기록"
-    url: "/boost-tv/"
+    alt: "wedev"
+    title: "wedev"
+    excerpt: "wedev 개발 기록"
+    url: "/wedev/"
     btn_class: "btn--primary"
     btn_label: "See more"
 ---

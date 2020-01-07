@@ -1,8 +1,8 @@
 ---
-title: Boost TV
+title: wedev
 layout: collection
-permalink: /boost-tv/
-collection: boostTv
+permalink: /wedev/
+collection: wedev
 author_profile: true
 entries_layout: grid
 classes: wide
