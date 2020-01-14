@@ -1,5 +1,7 @@
 # main links
 main:
+  - title: "Javascript"
+    url: /javascript/
   - title: "React.js"
     url: /react/
   - title: "Nest.js"

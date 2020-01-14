@@ -194,6 +194,10 @@ ec2:DescribeVpcs (for the AWS::EC2::VPC::Id parameter type)
 
 AWS CloudFormation은 AWS CloudFormation의 사용자, 역할 또는 AWS 서비스가 수행한 작업에 대한 레코드를 제공하는 서비스인 AWS CloudTrail과 통합됩니다. CloudTrail은 AWS CloudFormation 콘솔의 호출 및 AWS CloudFormation API 코드 호출 등 AWS CloudFormation에 대한 모든 API 호출을 이벤트로 캡처합니다. 추적을 생성하면 CloudTrail 이벤트를 비롯하여 AWS CloudFormation 이벤트를 Amazon S3 버킷으로 지속적으로 배포할 수 있습니다. 추적을 구성하지 않은 경우 **Event history(이벤트 기록)**에서 CloudTrail 콘솔의 최신 이벤트를 볼 수도 있습니다. CloudTrail에서 수집하는 정보를 사용하여 AWS CloudFormation에 수행된 요청, 요청이 수행된 IP 주소, 요청을 수행한 사람, 요청이 수행된 시간 및 추가 세부 정보를 확인할 수 있습니다.
 
+## AWS CloudFormation에 대한 VPC 엔드포인트 설정
+
+인터페이스 VPC 엔드포인트를 사용하도록 AWS CloudFormation을 구성하여 VPC의 보안 태세를 향상시킬 수 있습니다. 인터페이스 엔드포인트는 프라이빗 IP 주소를 사용하여 AWS CloudFormation API에 비공개로 액세스할 수 있는 기술인 PrivateLink로 구동됩니다. PrivateLink는 VPC 및 AWS CloudFormation 간의 모든 네트워크 트래픽을 Amazon 네트워크로 제한합니다. 또한 인터넷 게이트웨이, NAT 디바이스 또는 가상 프라이빗 게이트웨이가 필요 없습니다.
+
 ---
 
 ## 참조 링크
