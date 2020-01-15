@@ -74,6 +74,43 @@ Lexical Environment 는 변수의 이름과 그 변수가 가지는 값(primitiv
 
 이처럼 현재 컨택스트에 없는 변수나 함수를 찾기 위해서 그 상위 컨택스트를 참조해가는 과정을 `Scope chain` 이라고 합니다. `Scope` 란 현재 `Execution Context`를 말합니다. 이를 이용하면 `Closure` 에 대한 설명이 가능합니다. 아래에 다시 설명하겠습니다.
 
+![image](https://user-images.githubusercontent.com/32104982/72403712-65c12400-3796-11ea-919d-767868e6e28b.png)
+
+위의 예제를 보면 `[[Scopes]]` 의 존재를 알 수 있습니다. 이를 통해 외부 컨택스트를 접근할 수 있습니다.
+
+- Chrome version
+
+  ```javascript
+  function foo() {}
+
+  console.dir(foo);
+  ```
+
+- Node.js version
+
+  ```javascript
+  global.a = () => {
+    /* test function */
+  };
+
+  const s = new (require("inspector").Session)();
+  s.connect();
+
+  let objectId;
+  s.post("Runtime.evaluate", { expression: "a" }, (err, { result }) => {
+    objectId = result.objectId;
+  });
+  s.post(
+    "Runtime.getProperties",
+    { objectId },
+    (err, { internalProperties }) => {
+      console.dir(internalProperties);
+    }
+  );
+  ```
+
+  - [Chrome DevTools Viewer](https://chromedevtools.github.io/devtools-protocol/tot/Runtime)
+
 ##### This Binding
 
 `Global Execution Context` 에서는 아시다시피 `this` 는 `global object`를 가리키게 됩니다.
