@@ -314,6 +314,9 @@ collections:
   javascript:
     permalink: /:collection/:path
     output: true
+  web:
+    permalink: /:collection/:path
+    output: true
 
 # Defaults
 defaults:
@@ -656,6 +659,37 @@ defaults:
         # overlay_image: /assets/images/algorithm/algo.png
         # og_image: /assets/images/algorithm/algo.png
 
+  # _web
+  - scope:
+      path: ""
+      type: web
+    values:
+      layout: single
+      author_profile: false
+      comments: true
+      share: true
+      related: false
+      read_time: true
+      published: true
+
+      author_profile: true
+      layout: single
+      # classes: wide
+
+      toc: true #Table Of Contents 목차 보여줌
+      toc_label: "My Table of Contents" # toc 이름 정의
+      toc_icon: "cog" #font Awesome아이콘으로 toc 아이콘 설정
+      toc_sticky: true # 스크롤 내릴때 같이 내려가는 목차
+
+      
+      tag:
+        - web
+      category:
+        - web
+      header:
+        # teaser: /assets/images/algorithm/algo.png
+        # overlay_image: /assets/images/algorithm/algo.png
+        # og_image: /assets/images/algorithm/algo.png
 
   # _posts
   - scope:

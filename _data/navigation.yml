@@ -1,5 +1,7 @@
 # main links
 main:
+  - title: "Web"
+    url: /web/
   - title: "Javascript"
     url: /javascript/
   - title: "React.js"
