@@ -135,7 +135,7 @@ fakerPrint(); // undefined is undefined
 
 #### Variable Environment
 
-`Variable Environment`는 위에서 설명한 `Lexical Environment` 와 같습니다. 하나 다른점이 있다면 ES6 에서 `Variable Environment` 에서는 `var` 로 선언된 변수를 저장하고 `Lexical Environment` 에서는 `let` 과 `const`로 선언된 변수를 저장합니다.
+`Variable Environment`는 위에서 설명한 `Lexical Environment` 와 같습니다. 하나 다른점이 있다면 ES6 에서 `Lexical Environment` 에서는 `var` 로 선언된 변수를 저장하고 `Variable Environment` 에서는 `let` 과 `const`로 선언된 변수를 저장합니다.
 
 ### Execution Phase
 
