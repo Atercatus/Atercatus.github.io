@@ -1,7 +1,7 @@
 ---
-title: "2020-02-04 TIL"
-excerpt: "Prototype"
-last_modified_at: 2020-02-04T20:06:00
+title: "Prototype"
+excerpt: "Prototype 이해 예제"
+last_modified_at: 2020-01-14T12:06:00
 ---
 
 ## Prototype 이해 예제
