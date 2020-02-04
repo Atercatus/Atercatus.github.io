@@ -65,3 +65,9 @@ console.log(fn2()() === window); // true or false(strict mode)
 #### constructor function
 
 생성자 함수로 `new` 키워드와 함께 객체를 생성하게 되면 `this` 는 새롭게 생성하는 객체를 가리킵니다.
+
+## 참조 링크
+
+- [MDN this](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/this)
+- [MDN Strict mode](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Strict_mode)
+- [MDN 화살표함수](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/%EC%95%A0%EB%A1%9C%EC%9A%B0_%ED%8E%91%EC%85%98)
