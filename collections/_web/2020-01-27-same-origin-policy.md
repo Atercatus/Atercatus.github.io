@@ -171,7 +171,7 @@ xhr.send();
 
 하지만 same origin의 경우에만 그 응답을 볼 수 있습니다.
 
-## Getting around smae-origin policy
+## Getting around same-origin policy
 
 ### Using PostMessage to communicate between frames
 
