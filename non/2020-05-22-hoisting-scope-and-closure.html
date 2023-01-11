@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang=kr>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Hoisting, Scope, Closure 에 대한 접근">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hoisting, Scope and Closure">
+<meta property="og:url" content="https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html">
+<meta property="og:site_name" content="Cattus">
+<meta property="og:description" content="Hoisting, Scope, Closure 에 대한 접근">
+<meta property="og:locale">
+<meta property="og:image" content="https://user-images.githubusercontent.com/32104982/72327049-b03d9480-36f3-11ea-9d2e-5df7b676050d.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/32104982/72328473-5094b880-36f6-11ea-873b-36b033af1507.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/32104982/72403712-65c12400-3796-11ea-919d-767868e6e28b.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/32104982/72351648-1a6e2d80-3724-11ea-9225-5a8084dbd0d5.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/32104982/72351684-29ed7680-3724-11ea-8807-efaa86112e13.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/32104982/72351725-3d004680-3724-11ea-8232-64df2f062226.png">
+<meta property="article:published_time" content="2020-05-22T13:17:47.000Z">
+<meta property="article:modified_time" content="2023-01-11T13:20:20.851Z">
+<meta property="article:author" content="cattus">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/32104982/72327049-b03d9480-36f3-11ea-9d2e-5df7b676050d.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Hoisting, Scope and Closure</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">홈</a></li><!--
+     --><!--
+       --><li><a href="/about/">소개</a></li><!--
+     --><!--
+       --><li><a href="/archives/">글 목록</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">프로젝트</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="이전" href="/non/2020-05-22-same-origin-policy.html"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="다음" href="/non/2020-05-22-naver-%EC%9D%B8%ED%84%B4%EC%8B%AD-%ED%9B%84%EA%B8%B0.html"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="맨 위로" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="공유" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">이전</span>
+      <span id="i-next" class="info" style="display:none;">다음</span>
+      <span id="i-top" class="info" style="display:none;">맨 위로</span>
+      <span id="i-share" class="info" style="display:none;">공유</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&text=Hoisting, Scope and Closure"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&title=Hoisting, Scope and Closure"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&is_video=false&description=Hoisting, Scope and Closure"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Hoisting, Scope and Closure&body=Check out this article: https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&title=Hoisting, Scope and Closure"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&title=Hoisting, Scope and Closure"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&title=Hoisting, Scope and Closure"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&title=Hoisting, Scope and Closure"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&name=Hoisting, Scope and Closure&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&t=Hoisting, Scope and Closure"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Execution-Context"><span class="toc-number">1.</span> <span class="toc-text">Execution Context</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Global-Execution-Context"><span class="toc-number">1.1.</span> <span class="toc-text">Global Execution Context</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Functional-Execution-Context"><span class="toc-number">1.2.</span> <span class="toc-text">Functional Execution Context</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eval-Function-Execution-Context"><span class="toc-number">1.3.</span> <span class="toc-text">Eval Function Execution Context</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase"><span class="toc-number">2.</span> <span class="toc-text">Phase</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Creation-Phase"><span class="toc-number">2.1.</span> <span class="toc-text">Creation Phase</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Lexical-Environment"><span class="toc-number">2.1.1.</span> <span class="toc-text">Lexical Environment</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Environment-Record"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">Environment Record</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Reference-to-the-outer-environment"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">Reference to the outer environment</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#This-Binding"><span class="toc-number">2.1.1.3.</span> <span class="toc-text">This Binding</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Variable-Environment"><span class="toc-number">2.1.2.</span> <span class="toc-text">Variable Environment</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Execution-Phase"><span class="toc-number">2.2.</span> <span class="toc-text">Execution Phase</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Closure"><span class="toc-number">2.3.</span> <span class="toc-text">Closure</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EC%A1%B0%EB%A7%81%ED%81%AC"><span class="toc-number">3.</span> <span class="toc-text">참조링크</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Hoisting, Scope and Closure
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">cattus</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-05-22T13:17:47.000Z" itemprop="datePublished">2020-05-22</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>본 포스트는 <a target="_blank" rel="noopener" href="https://tylermcginnis.com/ultimate-guide-to-execution-contexts-hoisting-scopes-and-closures-in-javascript/">The Ultimate Guide to Hoisting, Scopes, and Closures in JavaScript</a> 과 <a target="_blank" rel="noopener" href="https://blog.bitsrc.io/understanding-execution-context-and-execution-stack-in-javascript-1c9ea8642dd0">Understanding Execution Context and Execution Stack in Javascript</a>를 읽은 후 해석한 내용입니다.</p>
+<h2 id="Execution-Context"><a href="#Execution-Context" class="headerlink" title="Execution Context"></a>Execution Context</h2><p>실행 컨텍스트는 자바스크립트 코드가 평가(eval)되고 실행되는 환경을 추상화하여 표현한 것 입니다. 이는 코드를 해석하고 실행하는 복잡한 과정을 좀 더 수월하게 하기 위해 존재합니다. 3가지의 <code>Execution Context</code>의 타입이 존재합니다.</p>
+<h3 id="Global-Execution-Context"><a href="#Global-Execution-Context" class="headerlink" title="Global Execution Context"></a>Global Execution Context</h3><p>기본 <code>Execution Context</code> 으로서 프로그램당 하나만 존재합니다. 코드가 실행되기 위해 적재되면 자바스크립트 엔진은 <code>Global Execution Context</code>를 만듭니다. 이는 <code>global object</code> 와 <code>this</code> 객체를 생성하는 과정을 포함합니다. 이때 <code>this</code>는 <code>global object</code>인 <code>window(browser)</code>또는 <code>global(node.js)</code>를 참조합니다.</p>
+<h3 id="Functional-Execution-Context"><a href="#Functional-Execution-Context" class="headerlink" title="Functional Execution Context"></a>Functional Execution Context</h3><p>함수가 **호출(invoked)**될 때 마다 생성됩니다. 각 함수는 자신만의 <code>Functional Execution Context</code>를 가집니다.</p>
+<h3 id="Eval-Function-Execution-Context"><a href="#Eval-Function-Execution-Context" class="headerlink" title="Eval Function Execution Context"></a><code>Eval</code> Function Execution Context</h3><p><code>eval</code> 함수는 자신 만의 <code>Execution Context</code> 를 가집니다.</p>
+<h2 id="Phase"><a href="#Phase" class="headerlink" title="Phase"></a>Phase</h2><p><code>Execution Context</code>는 자바스크립트 엔진에 의해서 두 가지의 phase를 거치면서 생성됩니다.</p>
+<ol>
+<li>Creation Phase</li>
+<li>Execution Phase</li>
+</ol>
+<h3 id="Creation-Phase"><a href="#Creation-Phase" class="headerlink" title="Creation Phase"></a>Creation Phase</h3><p><code>Execution Context</code> 는 Creation phase 동안 생성됩니다. 생성되는 동안 두 가지 일이 발생합니다.</p>
+<ol>
+<li><strong>LexicalEnviroment</strong> 컴포넌트 생성</li>
+<li><strong>VariableEnvironment</strong> 컴포넌트 생성</li>
+</ol>
+<h4 id="Lexical-Environment"><a href="#Lexical-Environment" class="headerlink" title="Lexical Environment"></a>Lexical Environment</h4><p>Lexical Environment 는 변수의 이름과 그 변수가 가지는 값(primitive, reference of &lt;array, function, object, etc&gt;)을 맵핑하고 있는 구조입니다. 이 컴포넌트는 또 3개의 작업을 포함합니다.</p>
+<ol>
+<li>Environment Record</li>
+<li>Reference to the outer environment</li>
+<li>This binding</li>
+</ol>
+<h5 id="Environment-Record"><a href="#Environment-Record" class="headerlink" title="Environment Record"></a>Environment Record</h5><p>변수와 함수의 정의를 LexicalEnvironment 컴포넌트 내에 저장합니다. 이들은 <code>Environment Record</code> 내의 <code>Declarative Environment Record</code> 라고 불리는 곳에 저장됩니다.</p>
+<p><img src="https://user-images.githubusercontent.com/32104982/72327049-b03d9480-36f3-11ea-9d2e-5df7b676050d.png" alt="image"></p>
+<p>이 과정에서 변수와 함수의 영역이 메모리에 할당되며 할당된 메모리에는 <code>var</code>로 선언된 변수의 경우 <code>undefined</code> 값이 할당됩니다. 함수의 경우 그 선언부가 메모리에 적재됩니다.</p>
+<p>이 때문에 코드상에서 <code>var</code>로 선언된 변수나 함수 선언부 위쪽에서 <code>console.log</code>를 찍거나 함수를 실행했을 때 <code>undefined</code>나 함수가 실행되는 경우가 발생합니다. 변수는 <code>undefined</code>로 할당되어 메모리에 적재되어 있고, 함수는 선언부만이 메모리에 적재되어 있고 호출 될 경우 <code>Function Execution Context</code>가 생성되므로 이같은 동작이 가능합니다.<br>우린 이를 <code>Hoisting</code>이라고 부릅니다. 즉 우리 <code>Hoisting</code> 은 작성한 코드가 최상단부로 이동된다고 하는 것은 오해입니다. 선언부가 메모리에 적재되는 방식이 위와 같으므로 이러한 동작이 가능한 것입니다.</p>
+<blockquote>
+<p><code>var</code> 이 아니라 <code>let</code> 또는 <code>const</code> 로 선언된 변수의 경우 값이 초기화되지 않은 상태로 남아있습니다.</p>
+</blockquote>
+<p><code>Global Execution Context</code> 일 경우 global object 를 추가로 저장합니다. object 내의 함수의 변수를 포함하는 object의 <code>property</code>들을 바인딩하는 작업을 포함합니다. 이들은 <code>Object Environment Record</code>에 저장합니다.</p>
+<p><code>Function Execution Context</code>는 정의된 함수가 호출 될 때 생성됩니다. 생성될 때 <code>arguments</code> 를 추가로 저장합니다. 이는 매개변수로 넘어온 객체들의 인덱스와, 값, 매개변수의 개수를 포함합니다.</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/ko/docs/Glossary/Hoisting">MDN hoisting</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/arguments">MDN arguments</a></li>
+</ul>
+<h5 id="Reference-to-the-outer-environment"><a href="#Reference-to-the-outer-environment" class="headerlink" title="Reference to the outer environment"></a>Reference to the outer environment</h5><p>현재 Context 외부에 있는 <code>Lexical Environment</code> 의 레퍼런스를 생성합니다.</p>
+<p><img src="https://user-images.githubusercontent.com/32104982/72328473-5094b880-36f6-11ea-873b-36b033af1507.png" alt="image"></p>
+<p>위 그림을 보면 <code>print</code> 함수의 <code>Execution Context</code> 에는 변수 <code>a</code> 가 존재하지 않습니다. 따라서 <code>console.log(a)</code> 가 실행 될 때, 현재 컨택스트 외부의 컨택스트를 참조하게 됩니다. 이때 위에 설명된 레퍼런스를 사용하게 됩니다.</p>
+<p>이처럼 현재 컨택스트에 없는 변수나 함수를 찾기 위해서 그 상위 컨택스트를 참조해가는 과정을 <code>Scope chain</code> 이라고 합니다. <code>Scope</code> 란 현재 <code>Execution Context</code>를 말합니다. 이를 이용하면 <code>Closure</code> 에 대한 설명이 가능합니다. 아래에 다시 설명하겠습니다.</p>
+<p><img src="https://user-images.githubusercontent.com/32104982/72403712-65c12400-3796-11ea-919d-767868e6e28b.png" alt="image"></p>
+<p>위의 예제를 보면 <code>[[Scopes]]</code> 의 존재를 알 수 있습니다. 이를 통해 외부 컨택스트를 접근할 수 있습니다.</p>
+<ul>
+<li><p>Chrome version</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">dir</span>(foo);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Node.js version</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">global</span>.<span class="property">a</span> = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">/* test function */</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> s = <span class="keyword">new</span> (<span class="built_in">require</span>(<span class="string">&#x27;inspector&#x27;</span>).<span class="property">Session</span>)();</span><br><span class="line">s.<span class="title function_">connect</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> objectId;</span><br><span class="line">s.<span class="title function_">post</span>(<span class="string">&#x27;Runtime.evaluate&#x27;</span>, &#123; <span class="attr">expression</span>: <span class="string">&#x27;a&#x27;</span> &#125;, <span class="function">(<span class="params">err, &#123; result &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">  objectId = result.<span class="property">objectId</span>;</span><br><span class="line">&#125;);</span><br><span class="line">s.<span class="title function_">post</span>(</span><br><span class="line">  <span class="string">&#x27;Runtime.getProperties&#x27;</span>,</span><br><span class="line">  &#123; objectId &#125;,</span><br><span class="line">  <span class="function">(<span class="params">err, &#123; internalProperties &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">dir</span>(internalProperties);</span><br><span class="line">  &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><a target="_blank" rel="noopener" href="https://chromedevtools.github.io/devtools-protocol/tot/Runtime">Chrome DevTools Viewer</a></li>
+</ul>
+</li>
+</ul>
+<h5 id="This-Binding"><a href="#This-Binding" class="headerlink" title="This Binding"></a>This Binding</h5><p><code>Global Execution Context</code> 에서는 아시다시피 <code>this</code> 는 <code>global object</code>를 가리키게 됩니다.</p>
+<p><code>Function Execution Context</code> 에서는 그 함수가 호출된 경우에 따라 다르게 바인딩 됩니다. 그 함수가 object 내에서 호출된 경우 즉, object 레퍼런스를 통해 호출된 경우 <code>this</code>는 그 object를 가리키게 되고, 외부에서 호출될 경우 <code>this</code>는 <code>global object</code> 를 가리킵니다. <code>strict mode</code> 일 경우 <code>undefined</code> 를 가리킵니다. 아래의 예제 코드를 참조하십시오.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> author = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;Atercatus&#x27;</span>,</span><br><span class="line">  <span class="attr">state</span>: <span class="string">&#x27;hungry&#x27;</span>,</span><br><span class="line">  <span class="title function_">print</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;<span class="variable language_">this</span>.name&#125;</span> is <span class="subst">$&#123;<span class="variable language_">this</span>.state&#125;</span>`</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">author.<span class="title function_">print</span>(); <span class="comment">// Atercatus is hungry</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fakerPrint = author.<span class="property">print</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">fakerPrint</span>(); <span class="comment">// undefined is undefined</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Variable-Environment"><a href="#Variable-Environment" class="headerlink" title="Variable Environment"></a>Variable Environment</h4><p><code>Variable Environment</code>는 위에서 설명한 <code>Lexical Environment</code> 와 같습니다. 하나 다른점이 있다면 ES6 에서 <code>Lexical Environment</code> 에서는 <code>var</code> 로 선언된 변수를 저장하고 <code>Variable Environment</code> 에서는 <code>let</code> 과 <code>const</code>로 선언된 변수를 저장합니다.</p>
+<h3 id="Execution-Phase"><a href="#Execution-Phase" class="headerlink" title="Execution Phase"></a>Execution Phase</h3><p>말그대로 자바스크립트 엔진이 코드 한줄 한줄을 해석하고 실행하는 과정입니다. 변수 할당문을 실행하면 변수에 값을 할당하고 함수 실행문을 실행하면 <code>Function Execution Context</code>를 생성합니다.</p>
+<p>아까 <code>Creation Phase</code> 에서 설명했듯이 <code>let</code> 과 <code>const</code> 로 선언된 변수는 <code>undefined</code> 로 초기화 않습니다. 이후 <code>Execution Phase</code> 에서 다른 값으로 초기화 되지 않고 선언만 될 경우, 이후 코드상에서 그 값을 참조했을 때 그 값을 찾을 수 없으므로 <code>undefined</code>로 그 값이 할당됩니다.</p>
+<h3 id="Closure"><a href="#Closure" class="headerlink" title="Closure"></a>Closure</h3><p><code>Scope chain</code>에 대해서 설명할 때, 이를 이용하면 <code>Closure</code> 를 이해할 수 있다고 했습니다. <code>Closure</code>에 대한 명세는 검색하는 곳에 따라 다양하게 나타납니다. <a target="_blank" rel="noopener" href="https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Closures">MDN</a> 에는 함수와 함수가 선언된 어휘적 환경의 조합이다. 라고 명시되어 있습니다. 자바스크립트는 함수를 리턴하면 <code>Closure Scope</code> 를 생성합니다. 즉, 함수와 함수가 선언된 <code>Execution Context</code> 의 조합이라고 생각합니다.</p>
+<p><img src="https://user-images.githubusercontent.com/32104982/72351648-1a6e2d80-3724-11ea-9225-5a8084dbd0d5.png" alt="image"></p>
+<p>위와 같이 <code>getClosure</code> 내에 <code>innerFunction</code> 을 선언했습니다. <code>innerFunction</code> 내부에는 <code>value</code> 와 <code>b</code>가 존재하지 않습니다.</p>
+<p><img src="https://user-images.githubusercontent.com/32104982/72351684-29ed7680-3724-11ea-8807-efaa86112e13.png" alt="image"></p>
+<p>생성된 <code>Closure Scope</code> 에는 <code>value</code> 와 <code>b</code> 가 존재합니다.</p>
+<p><img src="https://user-images.githubusercontent.com/32104982/72351725-3d004680-3724-11ea-8232-64df2f062226.png" alt="image"></p>
+<p><code>closure</code> 함수가 실행 될 때 <code>innerFunction</code> 의 <code>Execution Context</code> 내에는 <code>b</code> 와 <code>value</code> 가 존재하지 않습니다. 따라서 <code>Scope chain</code> 을 통해 상위 컨택스트(<code>Closure Scope</code>)의 <code>b</code>와 <code>value</code>를 참조합니다.</p>
+<h2 id="참조링크"><a href="#참조링크" class="headerlink" title="참조링크"></a>참조링크</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://tylermcginnis.com/ultimate-guide-to-execution-contexts-hoisting-scopes-and-closures-in-javascript/">The Ultimate Guide to Hoisting, Scopes, and Closures in JavaScript</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.bitsrc.io/understanding-execution-context-and-execution-stack-in-javascript-1c9ea8642dd0">Understanding Execution Context and Execution Stack in Javascript</a></p>
+</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">홈</a></li>
+         
+          <li><a href="/about/">소개</a></li>
+         
+          <li><a href="/archives/">글 목록</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">프로젝트</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Execution-Context"><span class="toc-number">1.</span> <span class="toc-text">Execution Context</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Global-Execution-Context"><span class="toc-number">1.1.</span> <span class="toc-text">Global Execution Context</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Functional-Execution-Context"><span class="toc-number">1.2.</span> <span class="toc-text">Functional Execution Context</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eval-Function-Execution-Context"><span class="toc-number">1.3.</span> <span class="toc-text">Eval Function Execution Context</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase"><span class="toc-number">2.</span> <span class="toc-text">Phase</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Creation-Phase"><span class="toc-number">2.1.</span> <span class="toc-text">Creation Phase</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Lexical-Environment"><span class="toc-number">2.1.1.</span> <span class="toc-text">Lexical Environment</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Environment-Record"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">Environment Record</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Reference-to-the-outer-environment"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">Reference to the outer environment</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#This-Binding"><span class="toc-number">2.1.1.3.</span> <span class="toc-text">This Binding</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Variable-Environment"><span class="toc-number">2.1.2.</span> <span class="toc-text">Variable Environment</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Execution-Phase"><span class="toc-number">2.2.</span> <span class="toc-text">Execution Phase</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Closure"><span class="toc-number">2.3.</span> <span class="toc-text">Closure</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%B0%B8%EC%A1%B0%EB%A7%81%ED%81%AC"><span class="toc-number">3.</span> <span class="toc-text">참조링크</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&text=Hoisting, Scope and Closure"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&title=Hoisting, Scope and Closure"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&is_video=false&description=Hoisting, Scope and Closure"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Hoisting, Scope and Closure&body=Check out this article: https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&title=Hoisting, Scope and Closure"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&title=Hoisting, Scope and Closure"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&title=Hoisting, Scope and Closure"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&title=Hoisting, Scope and Closure"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&name=Hoisting, Scope and Closure&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://atercatus.github.io/non/2020-05-22-hoisting-scope-and-closure.html&t=Hoisting, Scope and Closure"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 메뉴</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 공유</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 맨 위로</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    저작권 &copy;
+    
+    
+    2016-2023
+    cattus
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">홈</a></li><!--
+     --><!--
+       --><li><a href="/about/">소개</a></li><!--
+     --><!--
+       --><li><a href="/archives/">글 목록</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">프로젝트</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"클립보드에 복사하였습니다!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "복사하였습니다!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
