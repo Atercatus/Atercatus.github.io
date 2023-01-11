@@ -1,0 +1,19 @@
+.site-header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 4rem;
+  border-bottom: 1px solid var(--color-stroke);
+  padding: 0 clamp(1.375rem, 1.2rem + 0.89vw, 2rem);
+}
+
+.site-header__cluster {
+  display: flex;
+  align-items: center;
+}
+
+.site-header__logo {
+  width: 1.5rem;
+}
