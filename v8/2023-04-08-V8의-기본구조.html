@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang=kr>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="description">
+<meta property="og:type" content="article">
+<meta property="og:title" content="V8의 기본구조">
+<meta property="og:url" content="https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html">
+<meta property="og:site_name" content="Cattus">
+<meta property="og:description" content="description">
+<meta property="og:locale">
+<meta property="og:image" content="https://atercatus.github.io/v8/thumbnail">
+<meta property="article:published_time" content="2023-04-08T09:12:08.000Z">
+<meta property="article:modified_time" content="2023-04-08T09:37:38.415Z">
+<meta property="article:author" content="cattus">
+<meta property="article:tag" content="v8">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://atercatus.github.io/v8/thumbnail">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>V8의 기본구조</title>
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+    <meta name="google-site-verification" content="JMgm_ebovIuVgvEvesq-kvHTfzQ7xlnilRNyIoMesRs" />
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">홈</a></li><!--
+     --><!--
+       --><li><a href="/about/">소개</a></li><!--
+     --><!--
+       --><li><a href="/archives/">글 목록</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">프로젝트</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="이전" href="/javascript/2023-04-08-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EC%97%90%EC%84%9C-%EB%B0%94%EC%9D%B4%EB%84%88%EB%A6%AC-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%9D%BD%EB%8A%94-%EB%B2%95.html"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="맨 위로" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="공유" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">이전</span>
+      <span id="i-next" class="info" style="display:none;">다음</span>
+      <span id="i-top" class="info" style="display:none;">맨 위로</span>
+      <span id="i-share" class="info" style="display:none;">공유</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&text=V8의 기본구조"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&title=V8의 기본구조"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&is_video=false&description=V8의 기본구조"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=V8의 기본구조&body=Check out this article: https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&title=V8의 기본구조"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&title=V8의 기본구조"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&title=V8의 기본구조"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&title=V8의 기본구조"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&name=V8의 기본구조&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&t=V8의 기본구조"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-V8-%EC%9D%B4%EB%9E%80"><span class="toc-number">1.</span> <span class="toc-text">1. V8 이란?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC"><span class="toc-number">1.1.</span> <span class="toc-text">히스토리</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-V8-%EC%84%A4%EC%B9%98%ED%95%B4%EB%B3%B4%EA%B8%B0"><span class="toc-number">2.</span> <span class="toc-text">2. V8 설치해보기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-V8-%EC%9D%98-%EA%B5%AC%EC%A1%B0"><span class="toc-number">3.</span> <span class="toc-text">3. V8 의 구조</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-V8-%EC%9D%98-%EB%8F%99%EC%9E%91-%EB%B0%A9%EC%8B%9D"><span class="toc-number">4.</span> <span class="toc-text">4. V8 의 동작 방식</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Parser"><span class="toc-number">4.1.</span> <span class="toc-text">4-1. Parser</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Ignition"><span class="toc-number">4.2.</span> <span class="toc-text">4-2. Ignition</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-TurboFan"><span class="toc-number">4.3.</span> <span class="toc-text">4-3. TurboFan</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%EC%9D%B8%EB%9D%BC%EC%9D%B4%EB%8B%9D"><span class="toc-number">4.3.0.1.</span> <span class="toc-text">1. 인라이닝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-%EB%B0%98%EB%B3%B5%EB%90%9C-%EC%98%A4%EB%B8%8C%EC%A0%9D%ED%8A%B8-%EC%83%9D%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%9C-%EC%B5%9C%EC%A0%81%ED%99%94"><span class="toc-number">4.3.0.2.</span> <span class="toc-text">2. 반복된 오브젝트 생성에 대한 최적화</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        V8의 기본구조
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">cattus</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-04-08T09:12:08.000Z" itemprop="datePublished">2023-04-08</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/v8/">v8</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/v8/" rel="tag">v8</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>이 글에서는 널리 알려진 V8의 구조에 대해 알아봅니다. V8 이 어떤 구성요소로 이루어져 있고, 각 요소별 역할을 소개합니다. 현재 V8의 모든 부분을 알고 있지 않기 때문에, 소스 코드와 문서를 통해 알아본 내용이라 할지라도 틀린 부분이 있을 수 있습니다.</p>
+<h2 id="1-V8-이란"><a href="#1-V8-이란" class="headerlink" title="1. V8 이란?"></a>1. V8 이란?</h2><p>V8은 구글에서 공개한 오픈 소스 자바스크립트 엔진입니다. 구글에서 제공하는 웹 서비스들에서 겪고 있는 성능 문제를 해결하기 위해 개발되었습니다. C++ 로 구현되었습니다.</p>
+<h3 id="히스토리"><a href="#히스토리" class="headerlink" title="히스토리"></a>히스토리</h3><ul>
+<li>2008.09: V8 첫버전 공개</li>
+<li>2015: TurboFan 공개</li>
+<li>2016: Ignition 공개</li>
+<li>2017: Ignition 과 TurboFan 의 새로운 파이프라인도입</li>
+<li>2017: V8 5.9 버전부터는 Full-codegren 과 Crankshaft 더 이상 사용되지 않음</li>
+</ul>
+<h2 id="2-V8-설치해보기"><a href="#2-V8-설치해보기" class="headerlink" title="2. V8 설치해보기"></a>2. V8 설치해보기</h2><p><strong>V8 은 자체적으로 실행이 가능한 프로그램이 아닙니다.</strong> 따라서 V8 을 테스트 하기 위해서는 <a target="_blank" rel="noopener" href="https://v8.dev/docs/embed">임베딩이 필요합니다</a>. 그 과정이 다소 복잡하고 기본 구조를 알아내는데에는 d8 을 사용하는것으로 충분하여, V8을 임베딩해서 내부 구현을 알아보는 과정을 다음으로 미룹니다.</p>
+<p><strong><a target="_blank" rel="noopener" href="https://source.chromium.org/chromium/chromium/src/+/main:v8/src/d8/">d8</a> 이란</strong> V8의 developer shell 입니다. V8의 동작이나 새롭게 추가된 자바스크립트 기능을 테스트 해볼 수 있는 도구입니다. 저희는 <a target="_blank" rel="noopener" href="https://v8.dev/docs/d8">V8 의 동작을 디버깅하기 위해서 사용합니다.</a></p>
+<p>d8과 v8 이 오픈소스이지만 단순히 소스코드를 <code>git pull</code> 로 받아올 수 없습니다. 그래서 이 <a target="_blank" rel="noopener" href="https://gist.github.com/kevincennis/0cd2138c78a07412ef21">문서</a>를 참조하여 설치합니다.</p>
+<h2 id="3-V8-의-구조"><a href="#3-V8-의-구조" class="headerlink" title="3. V8 의 구조"></a>3. V8 의 구조</h2><p><img src="/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0/v8arch.jpg" alt="V8의-기본구조"></p>
+<h2 id="4-V8-의-동작-방식"><a href="#4-V8-의-동작-방식" class="headerlink" title="4. V8 의 동작 방식"></a>4. V8 의 동작 방식</h2><p>각 요소별 동작방식은 Parser, Ignition, TurboFan 요소별로 다른 문서로 상세히 설명할 예정입니다. 이 문서에서는 간략하게 요소별 역할과 개념만 소개합니다.</p>
+<h3 id="4-1-Parser"><a href="#4-1-Parser" class="headerlink" title="4-1. Parser"></a>4-1. Parser</h3><p>JS 코드를 파싱해서 추상 구문 트리(AST, Abstract Syntax Tree)를 생성합니다. V8 JS 코드를 실행하기까지 걸리는 시간에서 JS 를 파싱하는 과정도 꽤 많은 부분을 차지합니다.</p>
+<p>파싱시간을 최적화하는 코드작성법, Parser 의 자세한 동작 과정은 이 글에서는 소개하지 않고, Parser 를 거쳤을 때 생성되는 AST 만 예시로 보겠습니다.</p>
+<ul>
+<li><code>d8 --print-ast</code> 파라미터를 이용하면 AST 를 출력해줍니다.</li>
+</ul>
+<p><strong>[JS code]</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">add</span>(<span class="params">a, b</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> result = <span class="title function_">add</span>(<span class="number">1</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>[AST]</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">FUNC</span> at <span class="number">12</span></span><br><span class="line">. <span class="variable constant_">KIND</span> <span class="number">0</span></span><br><span class="line">. <span class="variable constant_">LITERAL</span> <span class="variable constant_">ID</span> <span class="number">1</span></span><br><span class="line">. <span class="variable constant_">SUSPEND</span> <span class="variable constant_">COUNT</span> <span class="number">0</span></span><br><span class="line">. <span class="variable constant_">NAME</span> <span class="string">&quot;add&quot;</span></span><br><span class="line">. <span class="variable constant_">PARAMS</span></span><br><span class="line">. . <span class="variable constant_">VAR</span> (<span class="number">0x7fc2e7039870</span>) (mode = <span class="variable constant_">VAR</span>, assigned = <span class="literal">false</span>) <span class="string">&quot;a&quot;</span></span><br><span class="line">. . <span class="variable constant_">VAR</span> (<span class="number">0x7fc2e70398f0</span>) (mode = <span class="variable constant_">VAR</span>, assigned = <span class="literal">false</span>) <span class="string">&quot;b&quot;</span></span><br><span class="line">. <span class="variable constant_">DECLS</span></span><br><span class="line">. . <span class="variable constant_">VARIABLE</span> (<span class="number">0x7fc2e7039870</span>) (mode = <span class="variable constant_">VAR</span>, assigned = <span class="literal">false</span>) <span class="string">&quot;a&quot;</span></span><br><span class="line">. . <span class="variable constant_">VARIABLE</span> (<span class="number">0x7fc2e70398f0</span>) (mode = <span class="variable constant_">VAR</span>, assigned = <span class="literal">false</span>) <span class="string">&quot;b&quot;</span></span><br><span class="line">. <span class="variable constant_">RETURN</span> at <span class="number">22</span></span><br><span class="line">. . <span class="variable constant_">ADD</span> at <span class="number">31</span></span><br><span class="line">. . . <span class="variable constant_">VAR</span> <span class="variable constant_">PROXY</span> parameter[<span class="number">0</span>] (<span class="number">0x7fc2e7039870</span>) (mode = <span class="variable constant_">VAR</span>, assigned = <span class="literal">false</span>) <span class="string">&quot;a&quot;</span></span><br><span class="line">. . . <span class="variable constant_">VAR</span> <span class="variable constant_">PROXY</span> parameter[<span class="number">1</span>] (<span class="number">0x7fc2e70398f0</span>) (mode = <span class="variable constant_">VAR</span>, assigned = <span class="literal">false</span>) <span class="string">&quot;b&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>[parser.cc]</strong></p>
+<p><img src="/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0/parser.png" alt="parser.cc"></p>
+<h3 id="4-2-Ignition"><a href="#4-2-Ignition" class="headerlink" title="4-2. Ignition"></a>4-2. Ignition</h3><p>Ignition 은 AST 로부터 바이트코드를 생성하고 이를 실행하는 역할을 수행합니다. Bytecode 는 말그대로 Byte 로 이루어진 코드입니다. 이를 사용하는 이유는 여러가지가 있습니다.</p>
+<p>첫째, 모든 머신코드를 생성해두게되면 바이트코드에 비해 훨씬 더 많은 양의(더 많은 라인수의) 코드를 메모리에 적재해야합니다.</p>
+<p>둘째, <strong>바이트코드는 하드웨어 종속성이 낮아서</strong> TurboFan을 제외한 다른 JIT 컴파일러로 대체가 가능합니다.</p>
+<p>셋째, 기존에 사용하던 TurboFan 을 수정하지 않고, TurboFan 의 인터페이스를 사용해서 바로 머신코드로 컴파일이 가능합니다.</p>
+<p>이 외에도 많은 이유로 인해서 바로 머신코드로 번역하지않고 Bytecode 로 번역하는 과정을 거칩니다.</p>
+<aside>
+💡 대신 C++ 코드를 사용할 수 있지 않은가?
+
+</aside>
+
+<p>아래와 같은 이유로 V8 개발진들은 C++ 코드로 직접 변환하는 대신 Bytecode 로 변환하는 것을 선택했습니다.</p>
+<p>첫째, <strong>C++ 과 JS 의 호출시스템이 달라</strong> <code>trampoline</code> 을 구현해야합니다. 호출 시스템이 다르다는건, C++의 경우 함수 호출 시, 매개변수를 스택에 직접 쌓고 호출하는 함수가 이를 직접 사용하는 반면, JS 의 경우 스택에 쌓지않고 객체를 만들어서 전달합니다. (아직 검증해보지 못한 내용입니다 ㅠ)</p>
+<p>트램폴린은 실행환경이 다른 두 함수 사이의 호출을 조절하기 위해서 콜스택과 레지스터 상태를 저장하고 복원하는 역할을 수행합니다. <code>JS A 함수 가 C++ B 함수 호출 ⇒ A 함수 호출 당시 콜스택 저장 후 B 호출 =&gt; B 종료되면 저장한 내용 복원</code></p>
+<p>둘째, Ignition 이 개발되기 전부터 TurboFan은 존재했습니다. 그래서 TurboFan 의 개발된 인터페이스를 이용하면 Bytecode 를 컴파일할 수 있었기에 <strong>추가 개발을 줄일 수 있었습니다.</strong></p>
+<hr>
+<p>Ignition 은 Bytecode 를 생성하고 이를 bytecode-handler 에게 dispatch 해줍니다. 핸들러는 다음 핸들러에게 dispatch 해주는 방식으로 코드가 스스로 실행되도록 합니다.</p>
+<p>실제 Ignition 내에는 더 많은 요소들로 이루어져 있습니다. 그래서 어디서부터 어디까지의 역할을 Ignition 이 수행하는지 애매모호 할 수 있습니다. <strong>지금은 AST 로부터 bytecode 를 생성하는 컴파일러와 이를 실행하는 인터프리터의 역할을 모두 수행한다고 이해할 수 있습니다.</strong></p>
+<p>d8 을 통해 Ignition 이 생성한 바이트코드를 볼 수 있습니다. <code>--print-bytecode</code> 파라미터를 이용하면 출력된 bytecode 를 확인할 수 있습니다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">add</span>(<span class="params">a, b</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> result = <span class="title function_">add</span>(<span class="number">1</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x32ff0025a41a</span> @    <span class="number">0</span> : <span class="number">13</span> <span class="number">00</span>             <span class="title class_">LdaConstant</span> [<span class="number">0</span>]</span><br><span class="line"><span class="number">0x32ff0025a41c</span> @    <span class="number">2</span> : c3                <span class="title class_">Star1</span></span><br><span class="line"><span class="number">0x32ff0025a41d</span> @    <span class="number">3</span> : <span class="number">19</span> fe f8          <span class="title class_">Mov</span> &lt;closure&gt;, r2</span><br><span class="line"><span class="number">0x32ff0025a420</span> @    <span class="number">6</span> : <span class="number">65</span> <span class="number">62</span> <span class="number">01</span> f9 <span class="number">02</span>    <span class="title class_">CallRuntime</span> [<span class="title class_">DeclareGlobals</span>], r1-r2</span><br><span class="line"><span class="number">0x32ff0025a425</span> @   <span class="number">11</span> : <span class="number">21</span> <span class="number">01</span> <span class="number">00</span>          <span class="title class_">LdaGlobal</span> [<span class="number">1</span>], [<span class="number">0</span>]</span><br><span class="line"><span class="number">0x32ff0025a428</span> @   <span class="number">14</span> : c3                <span class="title class_">Star1</span></span><br><span class="line"><span class="number">0x32ff0025a429</span> @   <span class="number">15</span> : 0d <span class="number">01</span>             <span class="title class_">LdaSmi</span> [<span class="number">1</span>]</span><br><span class="line"><span class="number">0x32ff0025a42b</span> @   <span class="number">17</span> : c2                <span class="title class_">Star2</span></span><br><span class="line"><span class="number">0x32ff0025a42c</span> @   <span class="number">18</span> : 0d <span class="number">03</span>             <span class="title class_">LdaSmi</span> [<span class="number">3</span>]</span><br><span class="line"><span class="number">0x32ff0025a42e</span> @   <span class="number">20</span> : c1                <span class="title class_">Star3</span></span><br><span class="line"><span class="number">0x32ff0025a42f</span> @   <span class="number">21</span> : <span class="number">63</span> f9 f8 f7 <span class="number">02</span>    <span class="title class_">CallUndefinedReceiver2</span> r1, r2, r3, [<span class="number">2</span>]</span><br><span class="line"><span class="number">0x32ff0025a434</span> @   <span class="number">26</span> : <span class="number">25</span> <span class="number">02</span>             <span class="title class_">StaCurrentContextSlot</span> [<span class="number">2</span>]</span><br><span class="line"><span class="number">0x32ff0025a436</span> @   <span class="number">28</span> : 0e                <span class="title class_">LdaUndefined</span></span><br><span class="line"><span class="number">0x32ff0025a437</span> @   <span class="number">29</span> : a9                <span class="title class_">Return</span></span><br></pre></td></tr></table></figure>
+
+<p>이 과정에서 레지스터와 누산기등이 사용됩니다. 이는 가상으로 V8 이 구현하여 사용하는것으로 자세한 동작방식은 추후 다른 문서에서 다루겠습니다.</p>
+<p><strong>[bytecodes.h]</strong></p>
+<p><img src="/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0/bytecodes.png" alt="bytecodes.h"></p>
+<h3 id="4-3-TurboFan"><a href="#4-3-TurboFan" class="headerlink" title="4-3. TurboFan"></a>4-3. TurboFan</h3><p>TurboFan 은 Bytecode 를 최적화된 machine code 로 컴파일하는 역할을 수행합니다. 추가로 실행할 코드를 최적화하는 작업도 진행합니다.</p>
+<p>TurboFan 은 Ignition 으로부터 받은 바이트코드를 TurboFan IR(Internal Representaion) 이라는 중간 표현으로 만듭니다. 어쎔블러는 IR 을 머신코드로 컴파일합니다. 이 때, 현재 JS 가 실행될 기기에 맞는 opcode 로 맵핑됩니다. opcode 란 프로세서가 수행할 작업을 지정하는 코드입니다. 아래에는 <a target="_blank" rel="noopener" href="http://ref.x86asm.net/coder64.html#x48">x86 asm opcode</a> 와 <a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1Z9iIHojKDrXvZ27gRX51UxHD-bKf1QcPzSijntpMJBM/edit">IR</a>의 예시입니다.</p>
+<p><img src="/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0/opcode1.png" alt="opcode"><br><img src="/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0/ir.png" alt="IR"></p>
+<p>출처: <a target="_blank" rel="noopener" href="https://v8.dev/blog/turbofan-jit">https://v8.dev/blog/turbofan-jit</a></p>
+<p><strong>[머신코드의 예시]</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">add</span>:</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        mov     <span class="variable constant_">DWORD</span> <span class="variable constant_">PTR</span> [rbp-<span class="number">4</span>], edi</span><br><span class="line">        mov     <span class="variable constant_">DWORD</span> <span class="variable constant_">PTR</span> [rbp-<span class="number">8</span>], esi</span><br><span class="line">        mov     eax, <span class="variable constant_">DWORD</span> <span class="variable constant_">PTR</span> [rbp-<span class="number">4</span>]</span><br><span class="line">        add     eax, <span class="variable constant_">DWORD</span> <span class="variable constant_">PTR</span> [rbp-<span class="number">8</span>]</span><br><span class="line">        pop     rbp</span><br><span class="line">        ret</span><br><span class="line"><span class="attr">main</span>:</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        mov     edi, <span class="number">1</span></span><br><span class="line">        mov     esi, <span class="number">3</span></span><br><span class="line">        call    add</span><br><span class="line">        mov     <span class="variable constant_">DWORD</span> <span class="variable constant_">PTR</span> [rbp-<span class="number">4</span>], eax</span><br><span class="line">        mov     eax, <span class="number">0</span></span><br><span class="line">        pop     rbp</span><br><span class="line">        ret</span><br></pre></td></tr></table></figure>
+
+<p><strong>[assembler-arm.cc]</strong></p>
+<p><img src="/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0/assembler.png" alt="assembler-arm.cc"></p>
+<p>TurboFan 이 수행하는 최적화작업은 여러가지가 있습니다. 정확하게 아는 바가 없어서, 문서와 유튜브를 통해 알게된 두 가지만 소개합니다.</p>
+<p><strong>반복 호출되는 코드를 hot function 이라고 합니다.</strong> TurboFan 은 이 hot function 에 대해서 최적화를 진행합니다. 단순히 반복된다고 해서 hot function 이 되어 최적화가 되지는 않습니다…!</p>
+<h5 id="1-인라이닝"><a href="#1-인라이닝" class="headerlink" title="1. 인라이닝"></a>1. 인라이닝</h5><p>반복 호출되는 함수의 코드를 호출부에 직접 삽입을 하는 최적화 방식입니다. JS 코드가 바로 삽입되는 것이 아니라 호출하기 위한 준비과정과 호출과정이 사라진 bytecode 가 생성된다고 이해할 수 있습니다.</p>
+<h5 id="2-반복된-오브젝트-생성에-대한-최적화"><a href="#2-반복된-오브젝트-생성에-대한-최적화" class="headerlink" title="2. 반복된 오브젝트 생성에 대한 최적화"></a>2. 반복된 오브젝트 생성에 대한 최적화</h5><p>JS 엔진내에서 오브젝트를 어떻게 관리하는지에 대한 이해가 필요해서, 추상적으로만 설명하겠습니다. 같은 타입의 오브젝트(동일한 프로퍼티를 가진)를 반복적으로 사용하게 되면 해당 오브젝트의 껍데기를 메모리에 올려둡니다. 이 후 같은 타입의 오브젝트를 사용하게되면 새롭게 오브젝트를 생성해서 메모리에 적재하지 않고 메모리에 적재된 껍데기를 재사용합니다. <strong>그래서 최적화를 위해서는 오브젝트를 정적타입이 있는것처럼 사용해야 합니다.</strong></p>
+<p><strong>[예시]</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">test</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> obj.<span class="property">prop</span> + obj.<span class="property">prop</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = &#123; <span class="attr">prop</span>: <span class="string">&#x27;a&#x27;</span> &#125;,</span><br><span class="line">  i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (i++ &lt; <span class="number">9000</span>) &#123;</span><br><span class="line">  <span class="title function_">test</span>(a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>d8 --trace-opt-verbose test.js</code> 실행결과는 아래와 같다.</p>
+<p><img src="/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0/opt.png" alt="opt"></p>
+<p>자주호출되는 함수와 오브젝트에 대해서 마킹이되어 캐싱이 된 것을 확인할 수 있다.</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">홈</a></li>
+         
+          <li><a href="/about/">소개</a></li>
+         
+          <li><a href="/archives/">글 목록</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">프로젝트</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-V8-%EC%9D%B4%EB%9E%80"><span class="toc-number">1.</span> <span class="toc-text">1. V8 이란?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC"><span class="toc-number">1.1.</span> <span class="toc-text">히스토리</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-V8-%EC%84%A4%EC%B9%98%ED%95%B4%EB%B3%B4%EA%B8%B0"><span class="toc-number">2.</span> <span class="toc-text">2. V8 설치해보기</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-V8-%EC%9D%98-%EA%B5%AC%EC%A1%B0"><span class="toc-number">3.</span> <span class="toc-text">3. V8 의 구조</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-V8-%EC%9D%98-%EB%8F%99%EC%9E%91-%EB%B0%A9%EC%8B%9D"><span class="toc-number">4.</span> <span class="toc-text">4. V8 의 동작 방식</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Parser"><span class="toc-number">4.1.</span> <span class="toc-text">4-1. Parser</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Ignition"><span class="toc-number">4.2.</span> <span class="toc-text">4-2. Ignition</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-TurboFan"><span class="toc-number">4.3.</span> <span class="toc-text">4-3. TurboFan</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%EC%9D%B8%EB%9D%BC%EC%9D%B4%EB%8B%9D"><span class="toc-number">4.3.0.1.</span> <span class="toc-text">1. 인라이닝</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-%EB%B0%98%EB%B3%B5%EB%90%9C-%EC%98%A4%EB%B8%8C%EC%A0%9D%ED%8A%B8-%EC%83%9D%EC%84%B1%EC%97%90-%EB%8C%80%ED%95%9C-%EC%B5%9C%EC%A0%81%ED%99%94"><span class="toc-number">4.3.0.2.</span> <span class="toc-text">2. 반복된 오브젝트 생성에 대한 최적화</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&text=V8의 기본구조"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&title=V8의 기본구조"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&is_video=false&description=V8의 기본구조"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=V8의 기본구조&body=Check out this article: https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&title=V8의 기본구조"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&title=V8의 기본구조"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&title=V8의 기본구조"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&title=V8의 기본구조"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&name=V8의 기본구조&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://atercatus.github.io/v8/2023-04-08-V8%EC%9D%98-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0.html&t=V8의 기본구조"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 메뉴</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 공유</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 맨 위로</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    저작권 &copy;
+    
+    
+    2016-2023
+    cattus
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">홈</a></li><!--
+     --><!--
+       --><li><a href="/about/">소개</a></li><!--
+     --><!--
+       --><li><a href="/archives/">글 목록</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">프로젝트</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"클립보드에 복사하였습니다!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "복사하였습니다!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
